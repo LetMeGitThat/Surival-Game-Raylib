@@ -1,16 +1,11 @@
 #include "includes/raylib.h"
 #include "Entity.hpp"
-#include "includes/raylib.h"
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 
 #define SPACING 16
-#define SEED 50
-#define GRASS "img/grass.png"
-#define WATER "img/water.png"
+#define SEED 51
 
-char* tiles[2] = {GRASS, WATER};
+char* tiles[2] = {"img/grass.png", "img/water.png"};
 
 int RandomNumber(int x, int y, int seed) {
 	srand(x * y * seed);
@@ -18,16 +13,40 @@ int RandomNumber(int x, int y, int seed) {
 	return rand() % 2;
 }
 
+const int RENDERDISTANCE = 37;
+
 void LoadMap() {
-    for (int j = 0; j < 17; j++) {
-		for (int i = 0; i < 17; i++) {
+    for (int j = 0; j < RENDERDISTANCE; j++) {
+		for (int i = 0; i < RENDERDISTANCE; i++) {
 			char* tile = tiles[RandomNumber(i, j, SEED)];
 
 			Texture2D tileSprite = LoadTexture(tile);
 			DrawTexture(tileSprite, i * SPACING, j * SPACING, WHITE);
-			std::cout << i * SPACING << " " << j * SPACING << std::endl;
 		}
 	}
+}
+
+void Input() {
+	if (IsKeyPressed(KEY_W)) {
+		
+	}
+	if (IsKeyPressed(KEY_A)) {
+		
+	}
+	if (IsKeyPressed(KEY_S)) {
+		
+	}
+	if (IsKeyPressed(KEY_D)) {
+		
+	}
+	
+	if (IsKeyReleased(KEY_W)) {
+
+	}
+
+
+
+
 }
 
 int main() {
@@ -37,21 +56,19 @@ int main() {
 	const char* TITLE = "Survival Game";
 	const int FPS = 60;
 
-	const int TILESIZE = WIDTH / 16;
-
 	InitWindow(WIDTH, HEIGHT, TITLE);
 	SetTargetFPS(FPS);
 
 	// Initializations
-
-	// Generate map
-	int mapData[5][5];
+	Texture2D playerSprite = LoadTexture("img/player.png");
+	Entity player({50, 50}, playerSprite);
 
 	while (WindowShouldClose() == false) {
 		BeginDrawing();
-
-		LoadMap();
+		
 		ClearBackground(BLACK);
+		LoadMap();
+		player.Draw();
 
 		EndDrawing();
 	}
