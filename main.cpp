@@ -1,32 +1,43 @@
 #include "includes/raylib.h"
 #include "Entity.hpp"
 #include "includes/raylib.h"
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 
-#define spacing 16
+#define SPACING 16
+#define SEED 50
+#define GRASS "img/grass.png"
+#define WATER "img/water.png"
 
-void GenerateMap(int mapData[5][5]) {
-	int offset = 8;
-	Color COLORS[2] = {GREEN, BLUE};
+char* tiles[2] = {GRASS, WATER};
 
-	for (int j = 0; j < 5; j++) {
-		for (int i = 0; i < 5; i++) {
-			int tileData = mapData[j][i];
+int RandomNumber(int x, int y, int seed) {
+	srand(x * y * seed);
 
-			Color color = COLORS[tileData];
+	return rand() % 2;
+}
 
-			std::cout << i * spacing << " " << j * spacing << std::endl;
-			DrawRectangle(i * spacing + (offset * i), j * spacing + (offset * j), 16, 16, color);
+void LoadMap() {
+    for (int j = 0; j < 17; j++) {
+		for (int i = 0; i < 17; i++) {
+			char* tile = tiles[RandomNumber(i, j, SEED)];
+
+			Texture2D tileSprite = LoadTexture(tile);
+			DrawTexture(tileSprite, i * SPACING, j * SPACING, WHITE);
+			std::cout << i * SPACING << " " << j * SPACING << std::endl;
 		}
 	}
 }
 
 int main() {
-  // Creating a window
+	// Creating a window
 	const int WIDTH = 600;
 	const int HEIGHT = 600;
-	const char* TITLE = "Surival Game";
+	const char* TITLE = "Survival Game";
 	const int FPS = 60;
+
+	const int TILESIZE = WIDTH / 16;
 
 	InitWindow(WIDTH, HEIGHT, TITLE);
 	SetTargetFPS(FPS);
@@ -34,19 +45,13 @@ int main() {
 	// Initializations
 
 	// Generate map
-	int mapData[5][5] = {
-		{0, 1, 1, 0, 0},
-		{0, 0, 1, 0, 0},
-		{0, 0, 1, 0, 0},
-		{0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0},
-	};
-
+	int mapData[5][5];
 
 	while (WindowShouldClose() == false) {
 		BeginDrawing();
 
-		GenerateMap(mapData);
+		LoadMap();
+		ClearBackground(BLACK);
 
 		EndDrawing();
 	}
