@@ -1,7 +1,7 @@
-#pragma once
 #include "Generation.hpp"
 #include "includes/raylib.h"
 #include <iostream>
+
 
 int TerrainGeneration::RandomNumber(int x, int y) {
 	srand(x * y * SEED);

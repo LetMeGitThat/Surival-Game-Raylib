@@ -1,14 +1,39 @@
 #include "includes/raylib.h"
 #include "Entity.hpp"
-#include "Generation.hpp"
 #include <iostream>
 
-// Generation Settings
 #define SPACING 16
 #define SEED 1000
-#define RENDERDISTANCE 20
+#define TREESPAWNCHANCE 2
 
-// Player Movement Input
+
+// Store this into another file called Map generation or something
+int RandomNumber(int x, int y, int seed, int max) {
+	srand(x * y * seed);
+
+	return rand() % max;
+}
+
+const int RENDERDISTANCE = 20;
+
+void LoadMap() {
+	Texture2D tiles[2] = {LoadTexture("img/grass.png"), LoadTexture("img/water.png")};
+	Texture2D treeSprite = LoadTexture("img/tree.png");
+
+    for (int j = 0; j < RENDERDISTANCE; j++) {
+		for (int i = 0; i < RENDERDISTANCE; i++) {
+			int tileIndex = RandomNumber(i, j, SEED, 2);
+			Texture2D tileSprite = tiles[tileIndex];
+
+			DrawTexture(tileSprite, i * SPACING, j * SPACING, WHITE);
+
+			if (tileIndex == 0 && RandomNumber(i+5, j+5, SEED, 10) < TREESPAWNCHANCE) {
+				DrawTexture(treeSprite, i * SPACING, j * SPACING, WHITE);
+			}
+		}
+	}
+}
+
 void Input(Entity& player) {
 	if (IsKeyDown(KEY_W)) {
 		player.position.y += -1;
@@ -36,7 +61,6 @@ int main() {
 
 	// Initializations
 	Texture2D playerSprite = LoadTexture("img/player.png");
-	TerrainGeneration terrainGeneration(SEED, SPACING, RENDERDISTANCE);
 	Entity player({50, 50}, playerSprite);
 
 	while (WindowShouldClose() == false) {
@@ -46,7 +70,7 @@ int main() {
 		ClearBackground(BLACK);
 
 		// Generate Map
-		terrainGeneration.GenerateMap();
+		LoadMap();
 
 		// Input
 		Input(player);
